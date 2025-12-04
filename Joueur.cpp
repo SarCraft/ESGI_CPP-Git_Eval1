@@ -1,6 +1,6 @@
 #include "Joueur.h"
 
-Joueur::Joueur(string n, string s) : nom(n), symbole(s) {}
+Joueur::Joueur(string n, char s) : nom(n), symbole(s) {}
 
 string Joueur::getNom() const {
     return nom;
@@ -10,6 +10,6 @@ void Joueur::setNom(const string n){
     nom = n;
 }
 
-string Joueur::getSymbole() const{
+char Joueur::getSymbole(){
     return symbole;
 }
