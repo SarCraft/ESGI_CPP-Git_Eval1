@@ -36,11 +36,11 @@ bool Grid::isFull(){
 
 bool Grid::placeSymbol(int row, int col, char symbol) {
     if (row < 0 || row >= size || col < 0 || col >= size) {
-        return false; // Position hors limites
+        return false;
     }
     if (cells[row][col] != ' ') {
         cout << "Case deja occupee, veuillez choisir une autre case." << endl;
-        return false; // Case déjà occupée
+        return false;
     }
     cells[row][col] = symbol;
     return true;
@@ -71,7 +71,7 @@ bool Grid::checkWin(char symbol) const {
         if (win) return true;
     }
     
-    // Vérifier la diagonale principale (haut-gauche à bas-droite)
+    // Vérifier la diagonale principale
     bool win = true;
     for (int i = 0; i < size; i++) {
         if (cells[i][i] != symbol) {
@@ -81,7 +81,7 @@ bool Grid::checkWin(char symbol) const {
     }
     if (win) return true;
     
-    // Vérifier la diagonale inverse (haut-droite à bas-gauche)
+    // Vérifier la diagonale inverse
     win = true;
     for (int i = 0; i < size; i++) {
         if (cells[i][size - 1 - i] != symbol) {
@@ -100,4 +100,8 @@ void Grid::reset() {
             cells[i][j] = ' ';
         }
     }
+}
+
+vector<vector<char>> Grid::getCells() const {
+    return cells;
 }

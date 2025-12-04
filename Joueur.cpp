@@ -10,6 +10,6 @@ void Joueur::setNom(const string n){
     nom = n;
 }
 
-char Joueur::getSymbole(){
+char Joueur::getSymbole() const {
     return symbole;
 }
