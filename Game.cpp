@@ -68,6 +68,13 @@ void Game::turn()
             return;
         }
 
+        if (grid.isFull()) {
+            cout << "Egalité ! La partie recommence" << endl;
+            grid.reset();
+            return;
+        }
+
+
         if(currentPlayer == &j1)
         {
             currentPlayer = &j2;

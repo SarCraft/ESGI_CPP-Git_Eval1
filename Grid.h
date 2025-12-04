@@ -15,7 +15,7 @@ public:
     Grid();
     void display() const;
     bool placeSymbol(int row, int col, char symbol);
-    bool isFull() const;
+    bool isFull();
     bool checkWin(char symbol) const;
     void reset();
 };
