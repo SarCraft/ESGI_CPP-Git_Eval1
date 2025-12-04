@@ -12,6 +12,7 @@ class Joueur {
     public:
         Joueur(string n, string s);
         string getNom() const;
+        void setNom(string n);
         string getSymbole() const;
 };
 
