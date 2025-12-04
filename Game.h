@@ -3,22 +3,13 @@
 
 #include "Joueur.h"
 #include "Grid.h"
+#include "pvp.h"
+#include "pve.h"
 
-
-class Game
-{
-    private:
-        Joueur j1;
-        Joueur j2;
-        Joueur* currentPlayer;
-        Grid grid;
-
-
-    public:
-        Game();
-        void turn();
-        void start();
-        void selectNames();
+// Game.h
+class Game {
+public:
+    void start();
 };
 
 #endif //ESGI_CPP_GIT_EVAL1_GAME_H
