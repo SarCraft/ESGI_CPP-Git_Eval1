@@ -36,17 +36,21 @@ void Game::turn()
         cout << currentPlayer->getNom() << " Veuillez rentrer le numero de la ligne, entre 1 et 3" << endl;
         int row;
         cin >> row;
-        while(row > 3 || row < 1)
+        while(cin.fail() || row > 3 || row < 1)
         {
-            cout << "Nombre incorrect, Veuillez rentrer le numero de la ligne, entre 1 et 3" << endl;
+            cin.clear();
+            cin.ignore(1000, '\n');
+            cout << "Entrée incorrect, Veuillez rentrer le numero de la ligne, entre 1 et 3" << endl;
             cin >> row;
         }
         cout << currentPlayer->getNom() << " Veuillez rentrer le numero de la colonne, entre 1 et 3" << endl;
         int col;
         cin >> col;
-        while(col > 3 || col < 1)
+        while(cin.fail() || col > 3 || col < 1)
         {
-            cout << "Nombre incorrect, Veuillez rentrer le numero de la colonne, entre 1 et 3" << endl;
+            cin.clear();
+            cin.ignore(1000, '\n');
+            cout << "Entrée incorrect, Veuillez rentrer le numero de la colonne, entre 1 et 3" << endl;
             cin >> col;
         }
         
