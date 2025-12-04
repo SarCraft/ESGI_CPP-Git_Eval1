@@ -13,7 +13,7 @@ class Joueur {
         Joueur(string n, char s);
         string getNom() const;
         void setNom(string n);
-        char getSymbole();
+        char getSymbole() const;
 };
 
 #endif
