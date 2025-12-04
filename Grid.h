@@ -18,6 +18,7 @@ public:
     bool isFull();
     bool checkWin(char symbol) const;
     void reset();
+    vector<vector<char>> getCells() const;
 };
 
 #endif
