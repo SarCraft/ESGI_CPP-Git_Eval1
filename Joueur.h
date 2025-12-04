@@ -14,7 +14,6 @@ class Joueur {
         string getNom() const;
         void setNom(string n);
         string getSymbole() const;
-        void setSymbole(string s);
 };
 
 #endif

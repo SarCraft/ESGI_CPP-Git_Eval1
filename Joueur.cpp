@@ -13,7 +13,3 @@ void Joueur::setNom(const string n){
 string Joueur::getSymbole() const{
     return symbole;
 }
-
-void Joueur::setSymbole(const string s){
-    symbole = s;
-}
