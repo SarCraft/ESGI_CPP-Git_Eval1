@@ -2,7 +2,6 @@
 #include "pve.h"
 #include <iostream>
 #include <cstdlib>
-#include <ctime>
 
 
 using namespace std;
@@ -30,21 +29,13 @@ void Pve::selectNames()
 
 void Pve::turn()
 {
-    // initialiser le random une seule fois
-    static bool seeded = false;
-    if (!seeded) {
-        srand(time(nullptr));
-        seeded = true;
-    }
-
     while (!grid.isFull())
     {
-        int row;
-        int col;
+        int row = 0;
+        int col = 0;
 
         if (currentPlayer == &j1)
         {
-            // ----- TOUR DU JOUEUR HUMAIN -----
             cout << currentPlayer->getNom() << " Veuillez rentrer le numero de la ligne, entre 1 et 3" << endl;
             cin >> row;
             while(cin.fail() || row > 3 || row < 1)
@@ -73,9 +64,14 @@ void Pve::turn()
         else
         {
             cout << "Tour du bot..." << endl;
-            while (!grid.placeSymbol(row, col, currentPlayer->getSymbole())){
-                row = rand() % 3; // 0,1 ou 2
-                col = rand() % 3; // 0,1 ou 2
+
+            row = rand() % 3;
+            col = rand() % 3;
+
+            while (!grid.placeSymbol(row, col, currentPlayer->getSymbole()))
+            {
+                row = rand() % 3;
+                col = rand() % 3;
             }
 
             cout << "Le bot a joué en ligne :  " << row + 1 << " et colonne : " << col + 1 << endl;
@@ -104,3 +100,4 @@ void Pve::turn()
         }
     }
 }
+

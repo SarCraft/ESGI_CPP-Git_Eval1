@@ -4,6 +4,7 @@
 #include "Joueur.h"
 #include "Grid.h"
 #include "pvp.h"
+#include "pve.h"
 
 // Game.h
 class Game {

@@ -9,6 +9,6 @@ void Game::start()
     // grid.display();
     // currentPlayer = &j1;
     // turn();
-    Pvp pvp;
-    pvp.start();
+    Pve pve;
+    pve.start();
 }
