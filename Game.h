@@ -6,8 +6,14 @@
 #include "GameRenderer.h"
 
 enum class GameState {
+    MODE_SELECTION,
     NAME_SELECTION,
     PLAYING
+};
+
+enum class GameMode {
+    PVP,  // Joueur vs Joueur
+    PVE   // Joueur vs Bot
 };
 
 class Game
@@ -21,6 +27,7 @@ class Game
         string winner;
         GameRenderer renderer;
         GameState gameState;
+        GameMode gameMode;
         string player1Name;
         string player2Name;
         int activeInput;
@@ -32,8 +39,11 @@ class Game
         void selectNames();
         void handleMouseClick(int mouseX, int mouseY);
         void handleTextInput();
+        void handleModeSelection(int mouseX, int mouseY);
+        void botTurn();
         void run();
         GameState getGameState() const;
+        GameMode getGameMode() const;
         string getPlayer1Name() const;
         string getPlayer2Name() const;
         int getActiveInput() const;

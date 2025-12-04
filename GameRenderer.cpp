@@ -13,6 +13,38 @@ void GameRenderer::closeWindow() {
     CloseWindow();
 }
 
+void GameRenderer::drawModeSelection() {
+    ClearBackground(RAYWHITE);
+
+    // Titre principal
+    DrawText("TIC TAC TOE", screenWidth/2 - MeasureText("TIC TAC TOE", 60)/2, 60, 60, DARKBLUE);
+    DrawText("Choisissez votre mode de jeu", screenWidth/2 - MeasureText("Choisissez votre mode de jeu", 30)/2, 150, 30, DARKGRAY);
+
+    // Bouton Joueur vs Joueur (PVP)
+    Rectangle pvpButton = {150, 300, 300, 80};
+    Vector2 mousePos = GetMousePosition();
+    bool pvpHover = CheckCollisionPointRec(mousePos, pvpButton);
+    
+    DrawRectangleRec(pvpButton, pvpHover ? Fade(BLUE, 0.7f) : Fade(BLUE, 0.5f));
+    DrawRectangleLinesEx(pvpButton, 3, DARKBLUE);
+    
+    DrawText("JOUEUR vs JOUEUR", screenWidth/2 - MeasureText("JOUEUR vs JOUEUR", 25)/2, 325, 25, WHITE);
+    DrawText("(2 joueurs)", screenWidth/2 - MeasureText("(2 joueurs)", 18)/2, 355, 18, Fade(WHITE, 0.8f));
+
+    // Bouton Joueur vs Bot (PVE)
+    Rectangle pveButton = {150, 400, 300, 80};
+    bool pveHover = CheckCollisionPointRec(mousePos, pveButton);
+    
+    DrawRectangleRec(pveButton, pveHover ? Fade(GREEN, 0.7f) : Fade(GREEN, 0.5f));
+    DrawRectangleLinesEx(pveButton, 3, DARKGREEN);
+    
+    DrawText("JOUEUR vs BOT", screenWidth/2 - MeasureText("JOUEUR vs BOT", 25)/2, 425, 25, WHITE);
+    DrawText("(contre l'ordinateur)", screenWidth/2 - MeasureText("(contre l'ordinateur)", 18)/2, 455, 18, Fade(WHITE, 0.8f));
+
+    // Instructions
+    DrawText("Cliquez sur un bouton pour commencer", screenWidth/2 - MeasureText("Cliquez sur un bouton pour commencer", 16)/2, 550, 16, GRAY);
+}
+
 void GameRenderer::drawBoard(const Grid& grid, const Joueur* currentPlayer, bool gameOver, const string& winner) {
     // Fond blanc
     ClearBackground(RAYWHITE);
@@ -94,9 +126,14 @@ void GameRenderer::drawNameSelection(const Game& game) {
     DrawText("TIC TAC TOE", screenWidth/2 - MeasureText("TIC TAC TOE", 50)/2, 80, 50, DARKBLUE);
     DrawText("Configuration des joueurs", screenWidth/2 - MeasureText("Configuration des joueurs", 25)/2, 150, 25, DARKGRAY);
 
-    // Instructions écrtes
-    DrawText("Appuyez sur TAB pour changer de champ", screenWidth/2 - MeasureText("Appuyez sur TAB pour changer de champ", 18)/2, 200, 18, GRAY);
-    DrawText("Appuyez sur ENTREE pour commencer", screenWidth/2 - MeasureText("Appuyez sur ENTREE pour commencer", 18)/2, 225, 18, GRAY);
+    // Instructions adaptées au mode
+    if (game.getGameMode() == GameMode::PVE) {
+        DrawText("Entrez votre nom", screenWidth/2 - MeasureText("Entrez votre nom", 18)/2, 200, 18, GRAY);
+        DrawText("Appuyez sur ENTREE pour commencer", screenWidth/2 - MeasureText("Appuyez sur ENTREE pour commencer", 18)/2, 225, 18, GRAY);
+    } else {
+        DrawText("Appuyez sur TAB pour changer de champ", screenWidth/2 - MeasureText("Appuyez sur TAB pour changer de champ", 18)/2, 200, 18, GRAY);
+        DrawText("Appuyez sur ENTREE pour commencer", screenWidth/2 - MeasureText("Appuyez sur ENTREE pour commencer", 18)/2, 225, 18, GRAY);
+    }
 
     // Saisie Joueur 1
     DrawText("Joueur 1 (X):", 100, 280, 25, DARKBLUE);
@@ -116,25 +153,34 @@ void GameRenderer::drawNameSelection(const Game& game) {
         DrawText(player1Name.c_str(), 110, 330, 20, BLACK);
     }
 
-    // Saisie Joueur 2
-    DrawText("Joueur 2 (O):", 100, 400, 25, DARKGREEN);
-    Rectangle input2 = {100, 435, 400, 50};
-    
-    Color bgColor2 = (game.getActiveInput() == 2) ? Fade(DARKGREEN, 0.3f) : Fade(LIGHTGRAY, 0.3f);
-    Color borderColor2 = (game.getActiveInput() == 2) ? DARKGREEN : DARKGRAY;
-    
-    DrawRectangleRec(input2, bgColor2);
-    DrawRectangleLinesEx(input2, 3, borderColor2);
-    
-    string player2Name = game.getPlayer2Name();
-    if (player2Name.empty()) {
-        DrawText("Entrez le nom...", 110, 450, 20, GRAY);
+    // Saisie Joueur 2 (seulement en mode PVP)
+    if (game.getGameMode() == GameMode::PVP) {
+        DrawText("Joueur 2 (O):", 100, 400, 25, DARKGREEN);
+        Rectangle input2 = {100, 435, 400, 50};
+        
+        Color bgColor2 = (game.getActiveInput() == 2) ? Fade(DARKGREEN, 0.3f) : Fade(LIGHTGRAY, 0.3f);
+        Color borderColor2 = (game.getActiveInput() == 2) ? DARKGREEN : DARKGRAY;
+        
+        DrawRectangleRec(input2, bgColor2);
+        DrawRectangleLinesEx(input2, 3, borderColor2);
+        
+        string player2Name = game.getPlayer2Name();
+        if (player2Name.empty()) {
+            DrawText("Entrez le nom...", 110, 450, 20, GRAY);
+        } else {
+            DrawText(player2Name.c_str(), 110, 450, 20, BLACK);
+        }
     } else {
-        DrawText(player2Name.c_str(), 110, 450, 20, BLACK);
+        // Afficher que le joueur 2 sera le Bot
+        DrawText("Joueur 2 (O):", 100, 400, 25, DARKGREEN);
+        DrawRectangle(100, 435, 400, 50, Fade(LIGHTGRAY, 0.2f));
+        DrawRectangleLines(100, 435, 400, 50, DARKGRAY);
+        DrawText("Bot (Ordinateur)", 110, 450, 20, DARKGRAY);
     }
 
     // Bouton commencer
-    bool canStart = !player1Name.empty() && !player2Name.empty();
+    string player2Name = game.getPlayer2Name();
+    bool canStart = game.getGameMode() == GameMode::PVE ? !player1Name.empty() : (!player1Name.empty() && !player2Name.empty());
     Rectangle startButton = {200, 550, 200, 60};
     
     Color buttonColor = canStart ? Fade(GREEN, 0.8f) : Fade(GRAY, 0.5f);

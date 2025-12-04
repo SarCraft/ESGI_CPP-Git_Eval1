@@ -10,6 +10,8 @@ using namespace std;
 
 class Game;
 
+enum class GameMode;  // Forward declaration
+
 class GameRenderer {
 private:
     const int screenWidth = 600;
@@ -20,6 +22,7 @@ private:
 
 public:
     GameRenderer();
+    void drawModeSelection();
     void drawBoard(const Grid& grid, const Joueur* currentPlayer, bool gameOver, const string& winner);
     void drawNameSelection(const Game& game);
     bool getCellFromMouseClick(int mouseX, int mouseY, int& row, int& col);

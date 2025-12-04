@@ -1,38 +1,24 @@
 #include "Game.h"
-#include "pvp.h"
-#include "pve.h"
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 
 using namespace std;
 
 Game::Game() : j1("Joueur1", 'X'), j2("Joueur2", 'O'), grid(), gameOver(false), winner(""), 
-               gameState(GameState::NAME_SELECTION), player1Name(""), player2Name(""), activeInput(1){}
-
-void Game::start()
-{
-    Pvp pvp;
-    Pve pve;
-
-
-    int modeJeu;
-    cout << "Choisissez votre mode de jeu : 1 = 1_Joueur, 2 = 2_Joueurs" <<endl;
-    cin >> modeJeu;
-    switch (modeJeu) {
-        case 1:
-            pve.start();
-            break;
-        case 2:
-            pvp.start();
-            break;
-        default:
-            cout << "Entree invalide" << endl;
-            break;
-    }
+               gameState(GameState::MODE_SELECTION), gameMode(GameMode::PVP), player1Name(""), player2Name(""), activeInput(1){
+    // Initialiser le générateur de nombres aléatoires pour le bot
+    srand(time(nullptr));
 }
 
 void Game::handleMouseClick(int mouseX, int mouseY)
 {
     if (gameOver) return;
+
+    // En mode PVE, seul le joueur 1 peut cliquer
+    if (gameMode == GameMode::PVE && currentPlayer != &j1) {
+        return;
+    }
 
     int row, col;
     
@@ -44,16 +30,23 @@ void Game::handleMouseClick(int mouseX, int mouseY)
             if (grid.checkWin(currentPlayer->getSymbole())) {
                 gameOver = true;
                 winner = currentPlayer->getNom();
+                return;
             }
             // Vérifier l'égalité
             else if (grid.isFull()) {
                 gameOver = true;
                 winner = "";
+                return;
             }
             // Changer de joueur
             else {
                 if (currentPlayer == &j1) {
                     currentPlayer = &j2;
+                    
+                    // En mode PVE, faire jouer le bot automatiquement
+                    if (gameMode == GameMode::PVE) {
+                        botTurn();
+                    }
                 } else {
                     currentPlayer = &j1;
                 }
@@ -62,40 +55,42 @@ void Game::handleMouseClick(int mouseX, int mouseY)
     }
 }
 
-void Game::handleMouseClick(int mouseX, int mouseY)
-{
+void Game::botTurn() {
     if (gameOver) return;
-
+    
+    // Attendre un peu pour que ce soit plus naturel (simulé visuellement)
     int row, col;
     
-    // Utiliser le renderer pour convertir les coordonnées de la souris en cellule
-    if (renderer.getCellFromMouseClick(mouseX, mouseY, row, col)) {
-        // Essayer de placer le symbole
-        if (grid.placeSymbol(row, col, currentPlayer->getSymbole())) {
-            // Vérifier la victoire
-            if (grid.checkWin(currentPlayer->getSymbole())) {
-                gameOver = true;
-                winner = currentPlayer->getNom();
-            }
-            // Vérifier l'égalité
-            else if (grid.isFull()) {
-                gameOver = true;
-                winner = "";
-            }
-            // Changer de joueur
-            else {
-                if (currentPlayer == &j1) {
-                    currentPlayer = &j2;
-                } else {
-                    currentPlayer = &j1;
-                }
-            }
-        }
+    // Le bot choisit une case aléatoire parmi les cases vides
+    do {
+        row = rand() % 3;
+        col = rand() % 3;
+    } while (!grid.placeSymbol(row, col, currentPlayer->getSymbole()));
+    
+    // Vérifier la victoire du bot
+    if (grid.checkWin(currentPlayer->getSymbole())) {
+        gameOver = true;
+        winner = currentPlayer->getNom();
+        return;
     }
+    
+    // Vérifier l'égalité
+    if (grid.isFull()) {
+        gameOver = true;
+        winner = "";
+        return;
+    }
+    
+    // Redonner le tour au joueur
+    currentPlayer = &j1;
 }
 
 GameState Game::getGameState() const {
     return gameState;
+}
+
+GameMode Game::getGameMode() const {
+    return gameMode;
 }
 
 string Game::getPlayer1Name() const {
@@ -108,6 +103,20 @@ string Game::getPlayer2Name() const {
 
 int Game::getActiveInput() const {
     return activeInput;
+}
+
+void Game::handleModeSelection(int mouseX, int mouseY) {
+    // Bouton PVP
+    if (mouseX >= 150 && mouseX <= 450 && mouseY >= 300 && mouseY <= 380) {
+        gameMode = GameMode::PVP;
+        gameState = GameState::NAME_SELECTION;
+    }
+    // Bouton PVE
+    else if (mouseX >= 150 && mouseX <= 450 && mouseY >= 400 && mouseY <= 480) {
+        gameMode = GameMode::PVE;
+        gameState = GameState::NAME_SELECTION;
+        player2Name = "Bot";
+    }
 }
 
 void Game::handleTextInput() {
@@ -136,13 +145,24 @@ void Game::handleTextInput() {
     }
 
     if (IsKeyPressed(KEY_ENTER)) {
-        if (!player1Name.empty() && !player2Name.empty()) {
-            j1.setNom(player1Name);
-            j2.setNom(player2Name);
-            gameState = GameState::PLAYING;
-            currentPlayer = &j1;
-        } else if (!player1Name.empty() && activeInput == 1) {
-            activeInput = 2;
+        if (gameMode == GameMode::PVE) {
+            // Mode contre le bot : seul le nom du joueur 1 est requis
+            if (!player1Name.empty()) {
+                j1.setNom(player1Name);
+                j2.setNom("Bot");
+                gameState = GameState::PLAYING;
+                currentPlayer = &j1;
+            }
+        } else {
+            // Mode PVP : les deux noms sont requis
+            if (!player1Name.empty() && !player2Name.empty()) {
+                j1.setNom(player1Name);
+                j2.setNom(player2Name);
+                gameState = GameState::PLAYING;
+                currentPlayer = &j1;
+            } else if (!player1Name.empty() && activeInput == 1) {
+                activeInput = 2;
+            }
         }
     }
 }
@@ -153,7 +173,13 @@ void Game::run()
 
     while (!WindowShouldClose())
     {
-        if (gameState == GameState::NAME_SELECTION) {
+        if (gameState == GameState::MODE_SELECTION) {
+            // Gestion du clic pour sélectionner le mode
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+                Vector2 mousePos = GetMousePosition();
+                handleModeSelection((int)mousePos.x, (int)mousePos.y);
+            }
+        } else if (gameState == GameState::NAME_SELECTION) {
             handleTextInput();
         } else {
             // Gestion des événements
@@ -173,7 +199,9 @@ void Game::run()
 
         // Dessin
         BeginDrawing();
-        if (gameState == GameState::NAME_SELECTION) {
+        if (gameState == GameState::MODE_SELECTION) {
+            renderer.drawModeSelection();
+        } else if (gameState == GameState::NAME_SELECTION) {
             renderer.drawNameSelection(*this);
         } else {
             renderer.drawBoard(grid, currentPlayer, gameOver, winner);
