@@ -12,9 +12,9 @@ class Joueur {
     public:
         Joueur(string n, string s);
         string getNom() const;
-        string setNom(string n) const;
+        void setNom(string n) const;
         string getSymbole() const;
-        string setSymbole(string s) const;
+        void setSymbole(string s) const;
 };
 
 #endif
