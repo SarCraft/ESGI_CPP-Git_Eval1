@@ -32,6 +32,17 @@ bool Grid::isFull() const {
     return true;
 }
 
+bool Grid::placeSymbol(int row, int col, char symbol) {
+    if (row < 0 || row >= size || col < 0 || col >= size) {
+        return false; // Position hors limites
+    }
+    if (cells[row][col] != ' ') {
+        return false; // Case déjà occupée
+    }
+    cells[row][col] = symbol;
+    return true;
+}
+
 void Grid::reset() {
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
