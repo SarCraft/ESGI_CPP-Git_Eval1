@@ -49,7 +49,13 @@ void Game::turn()
             cout << "Nombre incorrect, Veuillez rentrer le numero de la colonne, entre 1 et 3" << endl;
             cin >> col;
         }
-        grid.placeSymbol(row - 1,col - 1,currentPlayer->getSymbole());
+        
+        // Vérifier si le placement a réussi
+        if(!grid.placeSymbol(row - 1, col - 1, currentPlayer->getSymbole()))
+        {
+            // Si le placement a échoué, continuer la boucle sans changer de joueur
+            continue;
+        }
 
         grid.display();
 

@@ -39,6 +39,7 @@ bool Grid::placeSymbol(int row, int col, char symbol) {
         return false; // Position hors limites
     }
     if (cells[row][col] != ' ') {
+        cout << "Case deja occupee, veuillez choisir une autre case." << endl;
         return false; // Case déjà occupée
     }
     cells[row][col] = symbol;
