@@ -62,6 +62,38 @@ void Game::handleMouseClick(int mouseX, int mouseY)
     }
 }
 
+void Game::handleMouseClick(int mouseX, int mouseY)
+{
+    if (gameOver) return;
+
+    int row, col;
+    
+    // Utiliser le renderer pour convertir les coordonnées de la souris en cellule
+    if (renderer.getCellFromMouseClick(mouseX, mouseY, row, col)) {
+        // Essayer de placer le symbole
+        if (grid.placeSymbol(row, col, currentPlayer->getSymbole())) {
+            // Vérifier la victoire
+            if (grid.checkWin(currentPlayer->getSymbole())) {
+                gameOver = true;
+                winner = currentPlayer->getNom();
+            }
+            // Vérifier l'égalité
+            else if (grid.isFull()) {
+                gameOver = true;
+                winner = "";
+            }
+            // Changer de joueur
+            else {
+                if (currentPlayer == &j1) {
+                    currentPlayer = &j2;
+                } else {
+                    currentPlayer = &j1;
+                }
+            }
+        }
+    }
+}
+
 GameState Game::getGameState() const {
     return gameState;
 }
