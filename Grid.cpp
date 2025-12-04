@@ -100,7 +100,3 @@ void Grid::reset() {
         }
     }
 }
-
-bool Grid::checkWin(){
-    return false;
-}

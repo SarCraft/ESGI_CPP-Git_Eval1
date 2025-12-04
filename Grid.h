@@ -16,7 +16,7 @@ public:
     void display() const;
     bool placeSymbol(int row, int col, char symbol);
     bool isFull() const;
-    bool checkWin();
+    bool checkWin(char symbol) const;
     void reset();
 };
 
