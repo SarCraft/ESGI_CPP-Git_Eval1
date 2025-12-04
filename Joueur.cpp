@@ -6,14 +6,14 @@ string Joueur::getNom() const {
     return nom;
 }
 
-void Joueur::setNom(string n) const {
-    nom == n;
+void Joueur::setNom(const string n){
+    nom = n;
 }
 
 string Joueur::getSymbole() const{
     return symbole;
 }
 
-void Joueur::setSymbole(string s) const {
-    symbole == s;
+void Joueur::setSymbole(const string s){
+    symbole = s;
 }
