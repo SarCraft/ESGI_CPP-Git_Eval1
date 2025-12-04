@@ -45,6 +45,54 @@ bool Grid::placeSymbol(int row, int col, char symbol) {
     return true;
 }
 
+bool Grid::checkWin(char symbol) const {
+    // Vérifier les lignes
+    for (int i = 0; i < size; i++) {
+        bool win = true;
+        for (int j = 0; j < size; j++) {
+            if (cells[i][j] != symbol) {
+                win = false;
+                break;
+            }
+        }
+        if (win) return true;
+    }
+    
+    // Vérifier les colonnes
+    for (int j = 0; j < size; j++) {
+        bool win = true;
+        for (int i = 0; i < size; i++) {
+            if (cells[i][j] != symbol) {
+                win = false;
+                break;
+            }
+        }
+        if (win) return true;
+    }
+    
+    // Vérifier la diagonale principale (haut-gauche à bas-droite)
+    bool win = true;
+    for (int i = 0; i < size; i++) {
+        if (cells[i][i] != symbol) {
+            win = false;
+            break;
+        }
+    }
+    if (win) return true;
+    
+    // Vérifier la diagonale inverse (haut-droite à bas-gauche)
+    win = true;
+    for (int i = 0; i < size; i++) {
+        if (cells[i][size - 1 - i] != symbol) {
+            win = false;
+            break;
+        }
+    }
+    if (win) return true;
+    
+    return false;
+}
+
 void Grid::reset() {
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
