@@ -7,13 +7,13 @@ using namespace std;
 class Joueur {
     private:
         string nom;
-        string symbole;
+        char symbole;
 
     public:
-        Joueur(string n, string s);
+        Joueur(string n, char s);
         string getNom() const;
         void setNom(string n);
-        string getSymbole() const;
+        char getSymbole();
 };
 
 #endif
