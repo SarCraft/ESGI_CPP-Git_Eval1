@@ -1,24 +1,26 @@
 #include "Grid.h"
 #include <iostream>
 
+using namespace std;
+
 Grid::Grid() : size(3) {
-    cells.resize(size, std::vector<char>(size, ' '));
+    cells.resize(size, vector<char>(size, ' '));
 }
 
 void Grid::display() const {
-    std::cout << "\n";
+    cout << "\n";
     for (int i = 0; i < size; i++) {
-        std::cout << " ";
+        cout << " ";
         for (int j = 0; j < size; j++) {
-            std::cout << cells[i][j];
-            if (j < size - 1) std::cout << " | ";
+            cout << cells[i][j];
+            if (j < size - 1) cout << " | ";
         }
-        std::cout << "\n";
+        cout << "\n";
         if (i < size - 1) {
-            std::cout << " ---------\n";
+            cout << " ---------\n";
         }
     }
-    std::cout << "\n";
+    cout << "\n";
 }
 
 bool Grid::isFull() const {

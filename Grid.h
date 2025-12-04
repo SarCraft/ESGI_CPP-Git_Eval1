@@ -4,9 +4,11 @@
 #include <vector>
 #include <string>
 
+using namespace std;
+
 class Grid {
 private:
-    std::vector<std::vector<char>> cells;
+    vector<vector<char>> cells;
     int size;
 
 public:
