@@ -31,15 +31,32 @@ void Game::selectNames()
 
 void Game::turn()
 {
-    while (grid.checkWin() == false && grid.isFull() == false)
+    while (!grid.isFull())
     {
-        cout << "Veuillez rentrer le numéro de la ligne" << endl;
+        cout << currentPlayer->getNom() << " Veuillez rentrer le numero de la ligne, entre 1 et 3" << endl;
         int row;
         cin >> row;
-        cout << "Veuillez rentrer le numéro de la colonne" << endl;
+        while(row > 3 || row < 1)
+        {
+            cout << "Nombre incorrect, Veuillez rentrer le numero de la ligne, entre 1 et 3" << endl;
+            cin >> row;
+        }
+        cout << currentPlayer->getNom() << " Veuillez rentrer le numero de la colonne, entre 1 et 3" << endl;
         int col;
         cin >> col;
-        grid.placeSymbol(row,col,currentPlayer->getSymbole());
+        while(col > 3 || col < 1)
+        {
+            cout << "Nombre incorrect, Veuillez rentrer le numero de la colonne, entre 1 et 3" << endl;
+            cin >> col;
+        }
+        grid.placeSymbol(row - 1,col - 1,currentPlayer->getSymbole());
+
+        grid.display();
+
+        if(grid.checkWin(currentPlayer->getSymbole())){
+            cout << currentPlayer->getNom() << " a remporté la partie" << endl;
+            return;
+        }
 
         if(currentPlayer == &j1)
         {
@@ -47,9 +64,5 @@ void Game::turn()
         }else{
             currentPlayer = &j1;
         }
-        grid.display();
     }
 }
-
-
-
